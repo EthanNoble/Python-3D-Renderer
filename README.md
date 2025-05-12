@@ -3,7 +3,7 @@
 ![Teapot](https://github.com/user-attachments/assets/d10c06bc-8f3b-4f02-9ecf-5c42746c451b)
 
 # Purpose
-This code uses CPU compute to render 3-dimensional meshes from a primitive object file. Obviously rendering graphics on a CPU is wildly inefficient, but this is just a cool project that I had fun figuring out.
+This code uses CPU compute to render 3-dimensional meshes from a primitive object file. Rendering graphics on a CPU is obviously inefficient, but this is just a cool project that I had fun figuring out.
 
 # Install
 To run, you'll need Python 3 installed. Then clone the repository and install the needed modules.
