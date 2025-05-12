@@ -13,7 +13,7 @@ To run, you'll need Python 3 installed. Then clone the repository and install th
 ```pip install -r requirements.txt```
 
 # Usage
-To run the program, just use ```python main.py```.
+To run the program, just use ```python main.py```, assuming ```python``` is your environment variable for your installation.
 
 In ```main.py``` you'll see that a mesh object is created by passing in a ```.obj``` file name string. You can pass in the name of any file that is in the ```objects``` directory to load the mesh.
 
