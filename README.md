@@ -10,6 +10,8 @@ To run, you'll need Python 3 installed. Then clone the repository and install th
 
 ```git clone https://github.com/EthanNoble/Python-3D-Renderer.git```
 
+```cd Python-3D-Renderer```
+
 ```pip install -r requirements.txt```
 
 # Usage
