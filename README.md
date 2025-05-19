@@ -15,8 +15,8 @@ To run, you'll need Python 3 installed. Then clone the repository and install th
 ```pip install -r requirements.txt```
 
 # Usage
-To run the program, just use ```python main.py```, assuming ```python``` is your environment variable for your installation.
+To run the program, just navigate to the cloned directory with ```cd Python-3D-Renderer``` and use ```python main.py```, assuming ```python``` is your environment variable for your python installation. Another common installation name is ```python3```.
 
 In ```main.py``` you'll see that a mesh object is created by passing in a ```.obj``` file name string. You can pass in the name of any file that is in the ```objects``` directory to load the mesh.
 
-You can zoom in and out using the mouse scroll wheel. When you first run the program, the mesh might appear as a tiny dot. Just zoom in until it fills the screen.
+You can zoom in and out using the mouse scroll wheel or laptop touchpad. When you first run the program, the mesh might appear as a tiny dot. Just zoom in until it fills the screen.
