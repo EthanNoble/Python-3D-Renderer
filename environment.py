@@ -54,13 +54,17 @@ class RenderSpace:
 
     def render_mesh(self, mesh, surface):
         buffer = []
-        for polygon in mesh.polygons:
+        for i, polygon in enumerate(mesh.polygons):
             # Build polygon vertices
             vert_1 = mesh.vertices[polygon[0]-1]
             vert_2 = mesh.vertices[polygon[1]-1]
             vert_3 = mesh.vertices[polygon[2]-1]
             # Render polygon based on normal vector direction
-            polygon_normal = cross((array(vert_2) - array(vert_1)), (array(vert_3) - array(vert_1)))
+            if mesh.preload_normals:
+                polygon_normal = mesh.normals[i]
+            else:
+                polygon_normal = cross((array(vert_2) - array(vert_1)), (array(vert_3) - array(vert_1)))
+
             if polygon_normal[2] > 0:
                 points = []
                 for point in [vert_1, vert_2, vert_3]:
@@ -98,12 +102,13 @@ class RenderSpace:
 class Mesh:
     def __init__(self, object_file: str, origin_translate=False, preload_normals=False):
         self.polygons, self.vertices = load_obj_file(object_file)
+        self.preload_normals = preload_normals
         # Translates mesh roughly to origin for better
         # rotations around the origin
         if origin_translate:
             self.translate_to_origin()
         if preload_normals:
-            self.__preload_normals()
+            self.normals = self.__preload_normals()
     
     def rotate_x(self, theta):
         self.vertices = self.vertices @ array([
@@ -112,6 +117,13 @@ class Mesh:
             [0, -sin(theta), cos(theta)]
         ])
 
+        if self.preload_normals:
+            self.normals = self.normals @ array([
+                [1, 0, 0],
+                [0, cos(theta), sin(theta)],
+                [0, -sin(theta), cos(theta)]
+            ])
+
     def rotate_y(self, theta):
         self.vertices = self.vertices @ array([
             [cos(theta), 0, -sin(theta)],
@@ -119,12 +131,26 @@ class Mesh:
             [sin(theta), 0, cos(theta)]
         ])
 
+        if self.preload_normals:
+            self.normals = self.normals @ array([
+                [cos(theta), 0, -sin(theta)],
+                [0, 1, 0],
+                [sin(theta), 0, cos(theta)]
+            ])
+
     def rotate_z(self, theta):
         self.vertices = self.vertices @ array([
             [cos(theta), sin(theta), 0],
             [-sin(theta), cos(theta), 0],
             [0, 0, 1]
         ])
+
+        if self.preload_normals:
+            self.normals = self.normals @ array([
+                [cos(theta), sin(theta), 0],
+                [-sin(theta), cos(theta), 0],
+                [0, 0, 1]
+            ])
 
     def translate_to_origin(self):
         x_sum, y_sum, z_sum = 0, 0, 0
@@ -145,7 +171,14 @@ class Mesh:
             self.vertices[i][2] -= z_origin
     
     def __preload_normals(self):
-        pass
+        normals = []
+        for i, polygon in enumerate(self.polygons):
+            vert_1 = self.vertices[polygon[0]-1]
+            vert_2 = self.vertices[polygon[1]-1]
+            vert_3 = self.vertices[polygon[2]-1]
+            polygon_normal = cross((array(vert_2) - array(vert_1)), (array(vert_3) - array(vert_1)))
+            normals.append(polygon_normal)
+        return normals
 
 def deg_to_rad(degree):
     return (degree%361) * (pi/180)

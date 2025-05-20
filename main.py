@@ -14,7 +14,7 @@ time, time_steps = 0, 110
 
 render_space = RenderSpace()
 # Just put in the name of your object file that is in the objects folder
-mesh = Mesh(object_file='bunny.obj', origin_translate=True)
+mesh = Mesh(object_file='teapot.obj', origin_translate=True, preload_normals=True)
 
 degree = deg_to_rad(1)
 
