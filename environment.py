@@ -81,7 +81,10 @@ class RenderSpace:
                 shade_intensity = dot(normalize(polygon_normal), normalize(self.light_source))
                 ambient_threshold = 0.1 if self.ambient_lighting else 0
                 shade_intensity = max(shade_intensity, ambient_threshold)
-                color = (self.light_color[0] * shade_intensity, self.light_color[1] * shade_intensity, self.light_color[2] * shade_intensity)
+                r = self.light_color[0] * shade_intensity
+                g = self.light_color[1] * shade_intensity
+                b = self.light_color[2] * shade_intensity
+                color = (r, g, b)
                 buffer.append({'rgb': color, 'verts': points})
 
         # Sort polygons based on z value to avoid overlapping
