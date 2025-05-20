@@ -41,13 +41,13 @@ while True:
     keys = pg.key.get_pressed()
 
     if keys[pg.K_w]:
-        mesh.vertices = render_space.rotate_x(mesh.vertices, degree)
+        mesh.rotate(axis='x', theta=degree)
     if keys[pg.K_s]:
-        mesh.vertices = render_space.rotate_x(mesh.vertices, -degree)
+        mesh.rotate(axis='x', theta=-degree)
     if keys[pg.K_a]:
-        mesh.vertices = render_space.rotate_y(mesh.vertices, -degree)
+        mesh.rotate(axis='y', theta=-degree)
     if keys[pg.K_d]:
-        mesh.vertices = render_space.rotate_y(mesh.vertices, degree)
+        mesh.rotate(axis='y', theta=degree)
 
     # Reset screen
     screen.set()
