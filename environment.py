@@ -49,7 +49,6 @@ class RenderSpace:
     def __init__(self):
         self.zoom = 1
         self.zoom_speed = 10 # How fast you can zoom in/out
-        self.camera = [[0], [0], [0]]
         self.light_source = [1, 0, 1]
         self.light_color = Color.LIGHT_GRAY.value
 
@@ -60,7 +59,7 @@ class RenderSpace:
             vert_1 = mesh.vertices[polygon[0]-1]
             vert_2 = mesh.vertices[polygon[1]-1]
             vert_3 = mesh.vertices[polygon[2]-1]
-            # Render polygon based on normal vector direction relative to camera position
+            # Render polygon based on normal vector direction
             polygon_normal = cross((array(vert_2) - array(vert_1)), (array(vert_3) - array(vert_1)))
             if polygon_normal[2] > 0:
                 points = []
@@ -95,32 +94,37 @@ class RenderSpace:
             point2 = polygon['verts'][1][0:2]
             point3 = polygon['verts'][2][0:2]
             pg.draw.polygon(surface(), polygon['rgb'], (point1, point2, point3))
-    
-    def rotate_x(self, vertices, theta):
-        return (vertices @ array(
-            [[1, 0, 0],
-             [0, cos(theta), sin(theta)],
-             [0, -sin(theta), cos(theta)]])).tolist()
-
-    def rotate_y(self, vertices, theta):
-        return vertices @ array(
-            [[cos(theta), 0, -sin(theta)],
-             [0, 1, 0],
-             [sin(theta), 0, cos(theta)]])
-
-    def rotate_z(self, vertices, theta):
-        return vertices @ array(
-            [[cos(theta), sin(theta), 0],
-             [-sin(theta), cos(theta), 0],
-             [0, 0, 1]])
 
 class Mesh:
-    def __init__(self, object_file: str, origin_translate=False):
+    def __init__(self, object_file: str, origin_translate=False, preload_normals=False):
         self.polygons, self.vertices = load_obj_file(object_file)
         # Translates mesh roughly to origin for better
         # rotations around the origin
         if origin_translate:
             self.translate_to_origin()
+        if preload_normals:
+            self.__preload_normals()
+    
+    def rotate_x(self, theta):
+        self.vertices = self.vertices @ array([
+            [1, 0, 0],
+            [0, cos(theta), sin(theta)],
+            [0, -sin(theta), cos(theta)]
+        ])
+
+    def rotate_y(self, theta):
+        self.vertices = self.vertices @ array([
+            [cos(theta), 0, -sin(theta)],
+            [0, 1, 0],
+            [sin(theta), 0, cos(theta)]
+        ])
+
+    def rotate_z(self, theta):
+        self.vertices = self.vertices @ array([
+            [cos(theta), sin(theta), 0],
+            [-sin(theta), cos(theta), 0],
+            [0, 0, 1]
+        ])
 
     def translate_to_origin(self):
         x_sum, y_sum, z_sum = 0, 0, 0
@@ -139,6 +143,9 @@ class Mesh:
             self.vertices[i][0] -= x_origin
             self.vertices[i][1] -= y_origin
             self.vertices[i][2] -= z_origin
+    
+    def __preload_normals(self):
+        pass
 
 def deg_to_rad(degree):
     return (degree%361) * (pi/180)

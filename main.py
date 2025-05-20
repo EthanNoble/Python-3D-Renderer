@@ -14,7 +14,7 @@ time, time_steps = 0, 110
 
 render_space = RenderSpace()
 # Just put in the name of your object file that is in the objects folder
-mesh = Mesh(object_file='cat.obj', origin_translate=True)
+mesh = Mesh(object_file='bunny.obj', origin_translate=True)
 
 degree = deg_to_rad(1)
 
@@ -34,9 +34,9 @@ while True:
                     render_space.zoom = render_space.zoom / render_space.zoom_speed
 
     # Comment out these three lines to stop mesh from rotating without user input
-    mesh.vertices = render_space.rotate_x(mesh.vertices, degree)
-    mesh.vertices = render_space.rotate_y(mesh.vertices, degree)
-    mesh.vertices = render_space.rotate_z(mesh.vertices, degree)
+    mesh.rotate_x(degree)
+    mesh.rotate_y(degree)
+    mesh.rotate_z(degree)
 
     keys = pg.key.get_pressed()
 
