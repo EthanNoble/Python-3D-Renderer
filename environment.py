@@ -103,6 +103,18 @@ class Mesh:
     def __init__(self, object_file: str, origin_translate=False, preload_normals=False):
         self.polygons, self.vertices = load_obj_file(object_file)
         self.preload_normals = preload_normals
+        self.x_rot = lambda theta : [
+            [1, 0, 0],
+            [0, cos(theta), sin(theta)],
+            [0, -sin(theta), cos(theta)]]
+        self.y_rot = lambda theta : [
+            [cos(theta), 0, -sin(theta)],
+            [0, 1, 0],
+            [sin(theta), 0, cos(theta)]]
+        self.z_rot = lambda theta : [
+            [cos(theta), sin(theta), 0],
+            [-sin(theta), cos(theta), 0],
+            [0, 0, 1]]
         # Translates mesh roughly to origin for better
         # rotations around the origin
         if origin_translate:
@@ -110,47 +122,20 @@ class Mesh:
         if preload_normals:
             self.normals = self.__preload_normals()
     
-    def rotate_x(self, theta):
-        self.vertices = self.vertices @ array([
-            [1, 0, 0],
-            [0, cos(theta), sin(theta)],
-            [0, -sin(theta), cos(theta)]
-        ])
+    def rotate(self, axis: str, theta):
+        match axis:
+            case 'x':
+                rotation = self.x_rot(theta)
+            case 'y':
+                rotation = self.y_rot(theta)
+            case 'z':
+                rotation = self.z_rot(theta)
+            case _:
+                raise ValueError(f'\'{axis}\' is not a valid rotation axis.')
 
+        self.vertices = self.vertices @ array(rotation)
         if self.preload_normals:
-            self.normals = self.normals @ array([
-                [1, 0, 0],
-                [0, cos(theta), sin(theta)],
-                [0, -sin(theta), cos(theta)]
-            ])
-
-    def rotate_y(self, theta):
-        self.vertices = self.vertices @ array([
-            [cos(theta), 0, -sin(theta)],
-            [0, 1, 0],
-            [sin(theta), 0, cos(theta)]
-        ])
-
-        if self.preload_normals:
-            self.normals = self.normals @ array([
-                [cos(theta), 0, -sin(theta)],
-                [0, 1, 0],
-                [sin(theta), 0, cos(theta)]
-            ])
-
-    def rotate_z(self, theta):
-        self.vertices = self.vertices @ array([
-            [cos(theta), sin(theta), 0],
-            [-sin(theta), cos(theta), 0],
-            [0, 0, 1]
-        ])
-
-        if self.preload_normals:
-            self.normals = self.normals @ array([
-                [cos(theta), sin(theta), 0],
-                [-sin(theta), cos(theta), 0],
-                [0, 0, 1]
-            ])
+            self.normals = self.normals @ array(rotation)
 
     def translate_to_origin(self):
         x_sum, y_sum, z_sum = 0, 0, 0
