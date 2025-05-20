@@ -46,7 +46,8 @@ class Screen:
         self.dt = self.clock.tick(fps) / 1000
 
 class RenderSpace:
-    def __init__(self):
+    def __init__(self, ambient_lighting=True):
+        self.ambient_lighting = ambient_lighting
         self.zoom = 1
         self.zoom_speed = 10 # How fast you can zoom in/out
         self.light_source = [1, 0, 1]
@@ -78,7 +79,8 @@ class RenderSpace:
                     points.append((x_proj, y_proj, z))
                 # Shade polygon based on dot product of polygon normal and light normal
                 shade_intensity = dot(normalize(polygon_normal), normalize(self.light_source))
-                shade_intensity = max(shade_intensity, 0.02)
+                ambient_threshold = 0.1 if self.ambient_lighting else 0
+                shade_intensity = max(shade_intensity, ambient_threshold)
                 color = (self.light_color[0] * shade_intensity, self.light_color[1] * shade_intensity, self.light_color[2] * shade_intensity)
                 buffer.append({'rgb': color, 'verts': points})
 
